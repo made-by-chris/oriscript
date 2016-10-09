@@ -16,8 +16,8 @@ var cellSize = gridSize / gridResolution;
 var store = []
 var draw = SVG('drawing').size(gridSize, gridSize);
 
-drawGrid(numberTest(30))
-drawSquares(numberTest(30))
+drawGrid(numberTest(35))
+drawSquares(numberTest(35))
 
 function createCells(arr) {
   var x = document.querySelectorAll(".deleteme")
@@ -124,6 +124,7 @@ function drawSquares(source) {
     // );
     // right side
     /* if x is equal to bottomRightMax and y is less than bottomRightMax, increment y */
+    console.log("loopstep", i, "|| x", x, "|| topLeftMin", topLeftMin, "|| y", y, "|| bottomRightMax", bottomRightMax);
     if ( x === bottomRightMax && y < bottomRightMax) {
       console.log("right side");
       store["cell" + i] = draw.text(JSON.stringify(source[i][0])).move(x * cellSize, y * cellSize)
@@ -157,6 +158,9 @@ function drawSquares(source) {
       console.log("left side");
       store["cell" + i] = draw.text(JSON.stringify(source[i][0])).move(x * cellSize, y * cellSize)
       y--;
+      if(y === topLeftMin + 1){
+        topLeftMin++
+      }
     } else
     // top left
     /* if x is equal to topLeftMin and y is equal topLeftMin, increment x, decrement topLeftMin */
@@ -164,7 +168,6 @@ function drawSquares(source) {
       console.log("top left");
       store["cell" + i] = draw.text(JSON.stringify(source[i][0])).move(x * cellSize, y * cellSize)
       x++;
-      if(i > 0){topLeftMin++};
     } else
     // top side
     /* if x is less than bottomRightMax ( and no other cases apply ) increment x */
@@ -173,7 +176,6 @@ function drawSquares(source) {
       store["cell" + i] = draw.text(JSON.stringify(source[i][0])).move(x * cellSize, y * cellSize)
       x++;
     }
-    console.log("loopstep", i, "x", x, "topLeftMin", topLeftMin, "y", y, "bottomRightMax", bottomRightMax);
   }
 }
 
