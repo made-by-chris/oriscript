@@ -1,5 +1,5 @@
 // presentation layer generator
-var test = [["alpha",1,2,3,4,5,6,7,8], ["num",2,4,6,8], [2,4,6,8], [2,4,6,8], [], [1,3,6], [1,3,6], [1,3,6], [], [], [8], [7], [6], [5], [4], [3], [2], [1]];
+var test = [["alpha",1,2,3,4,5,6,7,8], ["num",2,4,6,8], [2,4,6,8], [2,4,6,8], [], [1,3,6], [1,3,6], [1,3,6], [], [], [8], [7], [6], [5], [4], [3], [2], [1], ];
 var numberTest = function(ln){
   var base = []
   for(var i = 0; i <= ln; i++) {
@@ -10,25 +10,23 @@ var numberTest = function(ln){
 
 var containerHeight = document.body.clientHeight - document.querySelector("textarea").clientHeight;
 var containerWidth = document.body.clientWidth;
-var gridResolution = Math.ceil(test.length / 3);
+var gridResolution = Math.sqrt(test.length * 2)
 var gridSize =  containerWidth < containerHeight ? containerWidth : containerHeight;
 var cellSize = gridSize / gridResolution;
 var store = []
 var draw = SVG('drawing').size(gridSize, gridSize);
 
-drawGrid(numberTest(35))
-drawSquares(numberTest(35))
+createCells(test)
 
 function createCells(arr) {
-  var x = document.querySelectorAll(".deleteme")
-  console.log(x);
+  drawGrid(numberTest(30))
+  var x = document.querySelectorAll(".deleteme");
   [].forEach.call(x, function(div) {
     div.parentNode.removeChild(div);
   });
 
-  var tmpChild = draw.group()
+  const finalComputedValues = arr.map(function(cell) {
 
-  var finalComputedValues = arr.map(function(cell) {
     function convertToPercent(arrarr) {
       return arrarr.map(function(arr) {
         return arr.map(function(num) {
@@ -36,8 +34,9 @@ function createCells(arr) {
         })
       })
     }
-
-    cell.map(function(num) {
+    var tmpParent = draw.group()
+    cell.forEach(function(num) {
+      var tmpChild = draw.group()
       switch (num) {
         case "alpha":
         var alpha = tmpChild.polygon(convertToPercent([[0,0],[0,10],[100,100],[100,90]])).fill('black').addClass("deleteme")
@@ -87,11 +86,10 @@ function createCells(arr) {
         var eight = tmpChild.polygon(convertToPercent([[0,70],[20,70],[20,60],[0,60]])).fill('black').addClass("deleteme")
         tmpChild.add(eight)
         break;
-        default:
-        break;
       }
+       tmpParent.add(tmpChild)
     })
-    return tmpChild;
+    return tmpParent
   })
   drawSquares(finalComputedValues)
 }
@@ -115,48 +113,38 @@ function drawSquares(source) {
   var bottomRightMax = dimensionMaxLength
   var topLeftMin = 0
   for(i = 0; i < source.length; i++) {
-    // console.log(
-    //   "step: ", i,
-    //   "x: ", x,
-    //   "y: ", y,
-    //   "bottomRightMax", bottomRightMax,
-    //   "topLeftMin", topLeftMin
-    // );
+    if(i >= (gridResolution * gridResolution)) {
+      break
+    }
     // right side
     /* if x is equal to bottomRightMax and y is less than bottomRightMax, increment y */
-    console.log("loopstep", i, "|| x", x, "|| topLeftMin", topLeftMin, "|| y", y, "|| bottomRightMax", bottomRightMax);
     if ( x === bottomRightMax && y < bottomRightMax) {
-      console.log("right side");
-      store["cell" + i] = draw.text(JSON.stringify(source[i][0])).move(x * cellSize, y * cellSize)
+      source[i].move(x * cellSize, y * cellSize)
       y++;
     } else
     // bottom side
     /* if x is equal to topLeftMin and y is equal to bottomRightMax plus one, decrement x */
     if ( x > topLeftMin && y === (bottomRightMax + 1)) {
-      console.log("bottom side");
-      store["cell" + i] = draw.text(JSON.stringify(source[i][0])).move(x * cellSize, y * cellSize)
+      source[i].move(x * cellSize, y * cellSize)
       --x;
     } else
     // bottom right
     /* if x is equal to bottomRightMax and y is equal to bottomRightMax, decrement x, decrement bottomRightMax */
     if ( x === bottomRightMax && y === bottomRightMax) {
-      console.log("bottom right");
-      store["cell" + i] = draw.text(JSON.stringify(source[i][0])).move(x * cellSize, y * cellSize)
+      source[i].move(x * cellSize, y * cellSize)
       x--;
       bottomRightMax--;
     } else
     // bottom left
     /* if x is equal to topLeftMin and y is equal to bottomRightMax plus 1, decrement y */
     if ( x === topLeftMin && y === bottomRightMax + 1 ) {
-      console.log("bottom left");
-      store["cell" + i] = draw.text(JSON.stringify(source[i][0])).move(x * cellSize, y * cellSize)
+      source[i].move(x * cellSize, y * cellSize)
       y--;
     } else
     // left side
     /* if x is equal to topLeftMin and y is greater than topLeftMin, decrement y */
     if ( x === topLeftMin && y > topLeftMin ) {
-      console.log("left side");
-      store["cell" + i] = draw.text(JSON.stringify(source[i][0])).move(x * cellSize, y * cellSize)
+      source[i].move(x * cellSize, y * cellSize)
       y--;
       if(y === topLeftMin + 1){
         topLeftMin++
@@ -165,15 +153,13 @@ function drawSquares(source) {
     // top left
     /* if x is equal to topLeftMin and y is equal topLeftMin, increment x, decrement topLeftMin */
     if ( x === topLeftMin && y === topLeftMin ) {
-      console.log("top left");
-      store["cell" + i] = draw.text(JSON.stringify(source[i][0])).move(x * cellSize, y * cellSize)
+      source[i].move(x * cellSize, y * cellSize)
       x++;
     } else
     // top side
     /* if x is less than bottomRightMax ( and no other cases apply ) increment x */
     if ( x < bottomRightMax ) {
-      console.log("top side");
-      store["cell" + i] = draw.text(JSON.stringify(source[i][0])).move(x * cellSize, y * cellSize)
+      source[i].move(x * cellSize, y * cellSize)
       x++;
     }
   }
