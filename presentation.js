@@ -107,6 +107,7 @@ function drawGrid(source) {
 }
 
 function drawSquares(source) {
+  console.log(source)
   var x = 0
   var y = 0
   var dimensionMaxLength = gridResolution -1;
