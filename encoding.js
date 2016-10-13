@@ -1,4 +1,4 @@
-var charTable = [ "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
+var charTable = [" ","a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
 document.querySelector("textarea").addEventListener("keyup", update)
 document.querySelector("textarea").focus()
 
@@ -28,7 +28,10 @@ function encode(source) {
       return charTable.indexOf(char) === -1 ? false : true;
     })
     .map((char) => {
-      var ind = charTable.indexOf(char) + 2
+      var ind = charTable.indexOf(char) + 1
+      if (ind === " ") {
+        return ["space"]
+      }
       if (ind > 14) {
         return [1, ind - 14]
       }
@@ -44,17 +47,23 @@ function encode(source) {
   function cellify(input) {
     let tissue = [[]]
     let total = 0;
-
     input.forEach(function(thisVal) {
-      newTotal = total + thisVal
-      if(Number.isInteger(newTotal / 8)){
-        currentCell = (newTotal / 8) - 1
+      if (thisVal === "space") {
+        console.log("space");
+        //TODO:
+        // fill current cell
+        // add alpha to currentCell
       } else {
-        currentCell = Math.floor(newTotal / 8)
+        newTotal = total + thisVal
+        if(Number.isInteger(newTotal / 8)){
+          currentCell = (newTotal / 8) - 1
+        } else {
+          currentCell = Math.floor(newTotal / 8)
+        }
+        remainder = (newTotal % 8 === 0 ? 8 : newTotal % 8)
+        tissue[currentCell] ? tissue[currentCell].push(remainder) : tissue[currentCell] = [remainder];
+        total += thisVal
       }
-      remainder = (newTotal % 8 === 0 ? 8 : newTotal % 8)
-      tissue[currentCell] ? tissue[currentCell].push(remainder) : tissue[currentCell] = [remainder];
-      total += thisVal
     })
     for(var i = 0; i < tissue.length; i++) {
       if(tissue[i] === undefined) {

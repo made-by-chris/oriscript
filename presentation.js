@@ -1,5 +1,5 @@
 // presentation layer generator
-var test = [["alpha",1,2,3,4,5,6,7,8], ["num",2,4,6,8], [2,4,6,8], [2,4,6,8], [], [1,3,6], [1,3,6], [1,3,6], [], [], [8], [7], [6], [5], [4], [3], [2], [1], ];
+var test = [[1,2,3,4,5,6,7,8], [2,4,6,8], [2,4,6,8], [2,4,6,8], [], [1,3,6], [1,3,6], [1,3,6], [], [], [8], [7], [6], [5], [4], [3], [2], [1]];
 var numberTest = function(ln){
   var base = []
   for(var i = 0; i <= ln; i++) {
@@ -24,9 +24,8 @@ function createCells(arr) {
   [].forEach.call(x, function(div) {
     div.parentNode.removeChild(div);
   });
-
+  arr.length > gridResolution * gridResolution ? arr.length = gridResolution * gridResolution : true
   const finalComputedValues = arr.map(function(cell) {
-
     function convertToPercent(arrarr) {
       return arrarr.map(function(arr) {
         return arr.map(function(num) {
@@ -38,7 +37,7 @@ function createCells(arr) {
     cell.forEach(function(num) {
       var tmpChild = draw.group()
       switch (num) {
-        case "alpha":
+        case charTable[charTable.length -1]:
         var alpha = tmpChild.polygon(convertToPercent([[0,0],[0,10],[100,100],[100,90]])).fill('black').addClass("deleteme")
         tmpChild.add(alpha)
         break;
@@ -94,11 +93,6 @@ function createCells(arr) {
   drawSquares(finalComputedValues)
 }
 
-// createCell(test)
-function draw(cells){
-  cells.forEach(function(cell){createCell(cell)})
-}
-
 function drawGrid(source) {
   for(i = 0; i < gridResolution + 1; i++) {
     draw.line(0, i * cellSize, cellSize * source.length / 2 + 50, i * cellSize).stroke({ width: 1 })
@@ -107,16 +101,13 @@ function drawGrid(source) {
 }
 
 function drawSquares(source) {
-  console.log(source)
+  console.log();
   var x = 0
   var y = 0
   var dimensionMaxLength = gridResolution -1;
   var bottomRightMax = dimensionMaxLength
   var topLeftMin = 0
   for(i = 0; i < source.length; i++) {
-    if(i >= (gridResolution * gridResolution)) {
-      break
-    }
     // right side
     /* if x is equal to bottomRightMax and y is less than bottomRightMax, increment y */
     if ( x === bottomRightMax && y < bottomRightMax) {
