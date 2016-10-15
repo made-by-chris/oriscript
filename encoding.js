@@ -22,6 +22,7 @@ function chain(){
 
 function encode(source) {
   function directConvert(val) {
+    source = source.toLowerCase()
     return source
     .split("")
     .filter((char) => {
@@ -29,7 +30,7 @@ function encode(source) {
     })
     .map((char) => {
       var ind = charTable.indexOf(char) + 1
-      if (ind === " ") {
+      if (char === " ") {
         return ["space"]
       }
       if (ind > 14) {
@@ -48,13 +49,15 @@ function encode(source) {
     let tissue = [[]]
     let total = 0;
     input.forEach(function(thisVal) {
+      newTotal = total + thisVal
       if (thisVal === "space") {
-        console.log("space");
-        //TODO:
-        // fill current cell
-        // add alpha to currentCell
+        if(Number.isInteger(newTotal / 8)){
+          tissue[(newTotal / 8) - 1].push("alpha")
+        } else {
+          total += Math.abs((total % 8) - 8)
+          tissue[Math.floor(total / 8)] = ["alpha"];
+        }
       } else {
-        newTotal = total + thisVal
         if(Number.isInteger(newTotal / 8)){
           currentCell = (newTotal / 8) - 1
         } else {
@@ -75,3 +78,19 @@ function encode(source) {
 
   return chain(directConvert, flatten, cellify)
 }
+input = document.querySelector("textarea")
+input.innerText = "All human beings are born free and equal in dignity and rights. They are endowed with reason and conscience and should act towards one another in a spirit of brotherhood."
+function triggerEvent(el, type){
+if ('createEvent' in document) {
+        // modern browsers, IE9+
+        var e = document.createEvent('HTMLEvents');
+        e.initEvent(type, false, true);
+        el.dispatchEvent(e);
+    } else {
+        // IE 8
+        var e = document.createEventObject();
+        e.eventType = type;
+        el.fireEvent('on'+e.eventType, e);
+    }
+}
+triggerEvent(input, "keyup")

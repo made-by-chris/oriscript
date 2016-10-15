@@ -1,29 +1,26 @@
 // presentation layer generator
-var test = [[1,2,3,4,5,6,7,8], [2,4,6,8], [2,4,6,8], [2,4,6,8], [], [1,3,6], [1,3,6], [1,3,6], [], [], [8], [7], [6], [5], [4], [3], [2], [1]];
-var numberTest = function(ln){
-  var base = []
-  for(var i = 0; i <= ln; i++) {
-    base.push([i])
-  }
-  return base
-}
-
-var containerHeight = document.body.clientHeight - document.querySelector("textarea").clientHeight;
+var containerHeight = document.body.clientHeight - (document.querySelector("textarea").clientHeight);
 var containerWidth = document.body.clientWidth;
-var gridResolution = Math.sqrt(test.length * 2)
+var gridResolution;
 var gridSize =  containerWidth < containerHeight ? containerWidth : containerHeight;
 var cellSize = gridSize / gridResolution;
 var store = []
 var draw = SVG('drawing').size(gridSize, gridSize);
 
-createCells(test)
 
 function createCells(arr) {
-  drawGrid(numberTest(30))
   var x = document.querySelectorAll(".deleteme");
   [].forEach.call(x, function(div) {
     div.parentNode.removeChild(div);
   });
+  containerHeight = document.body.clientHeight - document.querySelector("textarea").clientHeight;
+  containerWidth = document.body.clientWidth;
+  gridResolution = Math.ceil(Math.sqrt(arr.length))
+  gridSize =  containerWidth < containerHeight ? containerWidth : containerHeight;
+
+  cellSize = gridSize / gridResolution;
+  drawGrid(arr.length)
+
   arr.length > gridResolution * gridResolution ? arr.length = gridResolution * gridResolution : true
   const finalComputedValues = arr.map(function(cell) {
     function convertToPercent(arrarr) {
@@ -35,54 +32,54 @@ function createCells(arr) {
     }
     var tmpParent = draw.group()
     cell.forEach(function(num) {
-      var tmpChild = draw.group()
+      var tmpChild = draw.group().addClass("deleteme")
       switch (num) {
-        case charTable[charTable.length -1]:
-        var alpha = tmpChild.polygon(convertToPercent([[0,0],[0,10],[100,100],[100,90]])).fill('black').addClass("deleteme")
+        case "alpha":
+        var alpha = tmpChild.polygon(convertToPercent([[5,0],[0,0],[0,5],[95,100],[100,100],[100,95]])).fill('black')
         tmpChild.add(alpha)
         break;
         case "num":
-        var number = tmpChild.polygon(convertToPercent([[100,0],[100,10],[0,100],[0,90]])).fill('black').addClass("deleteme")
+        var number = tmpChild.polygon(convertToPercent([[100,0],[100,10],[0,100],[0,90]])).fill('black')
         tmpChild.add(number)
         break;
         case "punc":
-        var punctuation = tmpChild.polygon(convertToPercent([[10,0],[10,20],[20,20],[20,0]])).fill('black').addClass("deleteme")
+        var punctuation = tmpChild.polygon(convertToPercent([[10,0],[10,20],[20,20],[20,0]])).fill('black')
         tmpChild.add(punctuation)
         case "4":
         break;
-        var one = tmpChild.polygon(convertToPercent([[10,0],[10,20],[20,20],[20,0]])).fill('black').addClass("deleteme")
+        var one = tmpChild.polygon(convertToPercent([[10,0],[10,20],[20,20],[20,0]])).fill('black')
         tmpChild.add(one)
         break;
         case 1:
-        var one = tmpChild.polygon(convertToPercent([[10,0],[10,20],[20,20],[20,0]])).fill('black').addClass("deleteme")
+        var one = tmpChild.polygon(convertToPercent([[10,0],[10,20],[20,20],[20,0]])).fill('black')
         tmpChild.add(one)
         break;
         case 2:
-        var two = tmpChild.polygon(convertToPercent([[30,0],[30,20],[40,20],[40,0]])).fill('black').addClass("deleteme")
+        var two = tmpChild.polygon(convertToPercent([[30,0],[30,20],[40,20],[40,0]])).fill('black')
         tmpChild.add(two)
         break;
         case 3:
-        var three = tmpChild.polygon(convertToPercent([[100,10],[80,10],[80,20],[100,20]])).fill('black').addClass("deleteme")
+        var three = tmpChild.polygon(convertToPercent([[100,10],[80,10],[80,20],[100,20]])).fill('black')
         tmpChild.add(three)
         break;
         case 4:
-        var four = tmpChild.polygon(convertToPercent([[100,30],[80,30],[80,40],[100,40]])).fill('black').addClass("deleteme")
+        var four = tmpChild.polygon(convertToPercent([[100,30],[80,30],[80,40],[100,40]])).fill('black')
         tmpChild.add(four)
         break;
         case 5:
-        var five = tmpChild.polygon(convertToPercent([[90,100],[90,80],[80,80],[80,100]])).fill('black').addClass("deleteme")
+        var five = tmpChild.polygon(convertToPercent([[90,100],[90,80],[80,80],[80,100]])).fill('black')
         tmpChild.add(five)
         break;
         case 6:
-        var six = tmpChild.polygon(convertToPercent([[60,100],[60,80],[70,80],[70,100]])).fill('black').addClass("deleteme")
+        var six = tmpChild.polygon(convertToPercent([[60,100],[60,80],[70,80],[70,100]])).fill('black')
         tmpChild.add(six)
         break;
         case 7:
-        var seven = tmpChild.polygon(convertToPercent([[0,90],[20,90],[20,80],[0,80]])).fill('black').addClass("deleteme")
+        var seven = tmpChild.polygon(convertToPercent([[0,90],[20,90],[20,80],[0,80]])).fill('black')
         tmpChild.add(seven)
         break;
         case 8:
-        var eight = tmpChild.polygon(convertToPercent([[0,70],[20,70],[20,60],[0,60]])).fill('black').addClass("deleteme")
+        var eight = tmpChild.polygon(convertToPercent([[0,70],[20,70],[20,60],[0,60]])).fill('black')
         tmpChild.add(eight)
         break;
       }
@@ -93,15 +90,15 @@ function createCells(arr) {
   drawSquares(finalComputedValues)
 }
 
-function drawGrid(source) {
+function drawGrid() {
+  console.log()
   for(i = 0; i < gridResolution + 1; i++) {
-    draw.line(0, i * cellSize, cellSize * source.length / 2 + 50, i * cellSize).stroke({ width: 1 })
-    draw.line(i * cellSize, 0, i * cellSize, gridSize, i * cellSize).stroke({ width: 1 })
+    draw.line(0, i * cellSize, gridSize, i * cellSize).stroke({ width: 1 }).addClass("deleteme")
+    draw.line(i * cellSize, 0, i * cellSize, gridSize, i * cellSize).stroke({ width: 1 }).addClass("deleteme")
   }
 }
 
 function drawSquares(source) {
-  console.log();
   var x = 0
   var y = 0
   var dimensionMaxLength = gridResolution -1;
@@ -156,5 +153,3 @@ function drawSquares(source) {
     }
   }
 }
-
-drawGrid(test)
