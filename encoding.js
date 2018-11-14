@@ -31,32 +31,114 @@ function chain(){
 
 function encode(source) {
   function directConvert(val) {
-    source = source.toLowerCase()
-    return source
+    // preprocess
+    source=source
+    .replace(/DEL/g,         "\x08")
+    .replace(/<ET>/g,        "\x10")
+    .replace(/<GT>/g,        "\x11")
+    .replace(/<RT>/g,        "\x12")
+    .replace(/<AT>/g,        "\x13")
+    .replace(/<HT>/g,        "\x14")
+    .replace(/<CT>/g,        "\x15")
+    .replace(/<ET2>/g,       "\x16")
+    .replace(/<GT2>/g,       "\x17")
+    .replace(/<RT2>/g,       "\x18")
+    .replace(/<AT2>/g,       "\x19")
+    .replace(/<HT2>/g,       "\x1a")
+    .replace(/<CT2>/g,       "\x1b")
+    .replace(/\.com/g,       "\x1c")
+    .replace(/ESC/g,         "\x1e")
+    .replace(/(^|\s)left(\s|$)/ig,       "\x80")
+    .replace(/(^|\s)here(\s|$)/ig,       "\x81")
+    .replace(/(^|\s)false(\s|$)/ig,      "\x82")
+    .replace(/(^|\s)enter(\s|$)/ig,      "\x83")
+    .replace(/(^|\s)yes(\s|$)/ig,        "\x84")
+    .replace(/(^|\s)share(\s|$)/ig,      "\x85")
+    .replace(/(^|\s)destroy(\s|$)/ig,    "\x86")
+    .replace(/(^|\s)sooner(\s|$)/ig,     "\x87")
+    .replace(/(^|\s)space(\s|$)/ig,      "\x88")
+    .replace(/(^|\s)e-?mail(\s|$)/ig,    "\x89")
+    .replace(/(^|\s)name(\s|$)/ig,       "\x8a")
+    .replace(/(^|\s)phone(\s|$)/ig,      "\x8b")
+    .replace(/(^|\s)pin(\s|$)/ig,        "\x8c")
+    .replace(/(^|\s)sos(\s|$)/ig,        "\x8d")
+    .replace(/(^|\s)right(\s|$)/ig,      "\x8e")
+    .replace(/(^|\s)not \x81(\s|$)/ig,   "\x8f")
+    .replace(/(^|\s)opposite(\s|$)/ig,   "\x90")
+    .replace(/(^|\s)exit(\s|$)/ig,       "\x91")
+    .replace(/(^|\s)no(\s|$)/ig,         "\x92")
+    .replace(/(^|\s)don'?t \x85(\s|$)/ig,"\x93")
+    .replace(/(^|\s)protect(\s|$)/ig,    "\x94")
+    .replace(/(^|\s)later(\s|$)/ig,      "\x95")
+    .replace(/(^|\s)time(\s|$)/ig,       "\x96")
+    .replace(/(^|\s)address(\s|$)/ig,    "\x97")
+    .replace(/(^|\s)username(\s|$)/ig,   "\x98")
+    .replace(/(^|\s)IP(\s|$)/ig,         "\x99")
+    .replace(/(^|\s)password(\s|$)/ig,   "\x9a")
+    ;
+    var text="";
+    // introduce \x1f as a sign of switched case
+    var lowercase=true;
+    for(var i=0;i<source.length;i++){
+      var c=source.charAt(i);
+      if(c.match(/[a-zA-Z]/)){
+        if(!c.match(/[a-z]/)===lowercase){
+          text+="\x1f";
+          lowercase=!!c.match(/[a-z]/);
+        }
+        c=c.toLowerCase();
+      }
+      text+=c;
+    }
+    text=text
     .split("")
-    .filter((char) => {
-      return charTable.indexOf(char) === -1 ? false : true;
-    })
-    .map((char) => {
-      var ind = charTable.indexOf(char) + 1
-      if (char === " ") {
-        return ["space"]
+    .map((char)=>{
+      if(char===' ') return {table:true,glyph:0};
+      var ret={table:false,glyph:-1};
+      for(var i=0;i<encoding.length;i++){
+        if((ret.glyph=encoding[i].indexOf(char))!==-1){
+          ret.table=encoding[i][0];
+          break;
+        }
       }
-      if (ind > 14) {
-        return [1, ind - 14]
-      }
-      return ind
+      return ret;
     })
+    .filter(elem => elem.table);
+    var table="alpha";
+    source=[];
+    for(var i=0;i<text.length;i++){
+      var elem=text[i];
+      if(elem.table===true&&elem.glyph===0){
+        source.push("alpha");
+        continue;
+      }
+      if(elem.table!==table){
+          source.push(elem.table);
+          table=elem.table;
+      }
+      var max=15;
+      if(table==="punc"||table==="spec"){
+          max=14;
+      }else if(table==="tags"){
+          max=13;
+      }
+      if(elem.glyph>max){
+          source.push([1,elem.glyph-max]);
+      }else{
+          source.push(elem.glyph+1);
+      }
+    }
+    return source;
   }
 
   function flatten(arr) {
      var x = [].concat.apply([], arr);
-     return x
+     return x;
   }
 
   function cellify(input) {
     let tissue = [[]]
-    let total=0;
+    let total=1;
     input.forEach(function(thisVal) {
       let currentCell;
       let newTotal = total + thisVal;
@@ -79,6 +161,7 @@ function encode(source) {
         tissue[i] = []
       }
     }
+    console.log(tissue);
     return tissue;
   }
 
