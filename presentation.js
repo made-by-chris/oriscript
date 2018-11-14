@@ -43,14 +43,15 @@ function createCells(arr) {
         tmpChild.add(number)
         break;
         case "punc":
-        var punctuation = tmpChild.polygon(convertToPercent([[10,0],[10,20],[20,20],[20,0]])).fill('black')
+        var punctuation = tmpChild.polygon(convertToPercent([[0,0],[5,0],[20,15],[0,35],[0,45],[20,25],[95,100],[100,100],[100,95],[25,20],[45,0],[35,0],[15,20],[0,5]])).fill('black')
         tmpChild.add(punctuation)
+        break;
         case "spec":
-        var special = tmpChild.polygon(convertToPercent([[0,0],[5,0],[20,15],[0,35],[0,45],[20,25],[95,100],[100,100],[100,95],[25,20],[45,0],[35,0],[15,20],[0,5]])).fill('black')
+        var special = tmpChild.polygon(convertToPercent([[100,0],[95,0],[80,15],[100,35],[100,45],[80,25],[5,100],[0,100],[0,95],[75,20],[55,0],[65,0],[85,20],[100,5]])).fill('black')
         tmpChild.add(special)
         break;
         case "tags":
-        var tags = tmpChild.polygon(convertToPercent([[100,0],[95,0],[80,15],[100,35],[100,45],[80,25],[5,100],[0,100],[0,95],[75,20],[55,0],[65,0],[85,20],[100,5]])).fill('black');
+        var tags = tmpChild.polygon(convertToPercent([[0,0],[5,0],[50,45],[95,0],[100,0],[100,5],[55,50],[100,95],[100,100],[95,100],[50,55],[5,100],[0,100],[0,95],[45,50],[0,5]])).fill('black');
         tmpChild.add(tags)
         break;
         case 1:
