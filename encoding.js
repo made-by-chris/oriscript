@@ -56,17 +56,14 @@ function encode(source) {
 
   function cellify(input) {
     let tissue = [[]]
-    let total = 0;
+    let total=0;
     input.forEach(function(thisVal) {
-      newTotal = total + thisVal
-      if (thisVal === "space") {
-        if(Number.isInteger(newTotal / 8)){
-          tissue[(newTotal / 8) - 1].push("alpha")
-        } else {
-          total += Math.abs((total % 8) - 8)
-          tissue[Math.floor(total / 8)] = ["alpha"];
-        }
-      } else {
+      let currentCell;
+      let newTotal = total + thisVal;
+      if(typeof thisVal==="string"){
+        total += Math.abs((total % 8) - 8)
+        tissue[Math.floor(total / 8)] = [thisVal];
+      }else{
         if(Number.isInteger(newTotal / 8)){
           currentCell = (newTotal / 8) - 1
         } else {
@@ -76,13 +73,13 @@ function encode(source) {
         tissue[currentCell] ? tissue[currentCell].push(remainder) : tissue[currentCell] = [remainder];
         total += thisVal
       }
-    })
+    });
     for(var i = 0; i < tissue.length; i++) {
       if(tissue[i] === undefined) {
         tissue[i] = []
       }
     }
-    return tissue
+    return tissue;
   }
 
   return chain(directConvert, flatten, cellify)
