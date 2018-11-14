@@ -21,7 +21,7 @@ function createCells(arr) {
   cellSize = gridSize / gridResolution;
   drawGrid(arr.length)
 
-  arr.length > gridResolution * gridResolution ? arr.length = gridResolution * gridResolution : true
+  arr.length=Math.max(arr.length,gridResolution*gridResolution);
   const finalComputedValues = arr.map(function(cell) {
     function convertToPercent(arrarr) {
       return arrarr.map(function(arr) {
@@ -45,10 +45,13 @@ function createCells(arr) {
         case "punc":
         var punctuation = tmpChild.polygon(convertToPercent([[10,0],[10,20],[20,20],[20,0]])).fill('black')
         tmpChild.add(punctuation)
-        case "4":
+        case "spec":
+        var special = tmpChild.polygon(convertToPercent([[0,0],[5,0],[20,15],[0,35],[0,45],[20,25],[95,100],[100,100],[100,95],[25,20],[45,0],[35,0],[15,20],[0,5]])).fill('black')
+        tmpChild.add(special)
         break;
-        var one = tmpChild.polygon(convertToPercent([[10,0],[10,20],[20,20],[20,0]])).fill('black')
-        tmpChild.add(one)
+        case "tags":
+        var tags = tmpChild.polygon(convertToPercent([[100,0],[95,0],[80,15],[100,35],[100,45],[80,25],[5,100],[0,100],[0,95],[75,20],[55,0],[65,0],[85,20],[100,5]])).fill('black');
+        tmpChild.add(tags)
         break;
         case 1:
         var one = tmpChild.polygon(convertToPercent([[10,0],[10,20],[20,20],[20,0]])).fill('black')
@@ -91,7 +94,6 @@ function createCells(arr) {
 }
 
 function drawGrid() {
-  console.log()
   for(i = 0; i < gridResolution + 1; i++) {
     draw.line(0, i * cellSize, gridSize, i * cellSize).stroke({ width: 1 }).addClass("deleteme")
     draw.line(i * cellSize, 0, i * cellSize, gridSize, i * cellSize).stroke({ width: 1 }).addClass("deleteme")
