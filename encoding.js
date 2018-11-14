@@ -1,4 +1,13 @@
-var charTable = [" ","a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
+var encoding = [
+    ["alpha","a","b","c","d","e","f","g","h","i","j","k","l","m","ä","ü","n","o","p","q","r","s","t","u","v","w","x","y","z","ß","ö","æ"],
+    ["num","1","2","3","4","5","6","7","8","9","0","(","[","{","mod","φ","=","+","−","×","÷","%",">","<","^",".","#",")","]","}","π","∥"],
+    //                              <ET>   <GT>   <RT>   <AT>   <HT>   <CT>                                       <ET2>  <GT2>  <RT2>  <AT2>  <HT2>  <CT2>      empty?
+    ["punc",".","!","?","”","«",":","\x10","\x11","\x12","\x13","\x14","\x15","ą","ñ"," ",",","¡","¿","„","»",";","\x16","\x17","\x18","\x19","\x1a","\x1b","ę",""],
+    //                  RETURN                                        case   .com       DEL    ESC
+    ["spec","@","-","~","\r","≥","∞","\\","€","£","°","¦","⟨","⁄","‰","\x1f","\x1c","_","\x08","\x1e","≤","*","¤","$","¥","•","|","⟩","/","‱"],
+    //      left   here   false  enter  yes    share  destroy sooner space  email  name   phone  pin    SOS    right  !here  opposite exit   no    !share protect later  time  address username IP    password
+    ["tags","\x80","\x81","\x82","\x83","\x84","\x85","\x86", "\x87","\x88","\x89","\x8a","\x8b","\x8c","\x8d","\x8e","\x8f","\x90",  "\x91","\x92","\x93","\x94","\x95","\x96","\x97","\x98",  "\x99","\x9a"]
+];
 document.querySelector("textarea").addEventListener("keyup", update)
 document.querySelector("textarea").focus()
 
