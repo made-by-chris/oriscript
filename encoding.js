@@ -7,12 +7,12 @@ var encoding = [
     ["spec","@","-","~","\r","≥","∞","\\","€","£","°","¦","⟨","⁄","‰","\x1f","\x1c","_","\x08","\x1e","≤","*","¤","$","¥","•","|","⟩","/","‱"],
     //      left   here   false  enter  yes    share  destroy sooner space  email  name   phone  pin    SOS    right  !here  opposite exit   no    !share protect later  time  address username IP    password
     ["tags","\x80","\x81","\x82","\x83","\x84","\x85","\x86", "\x87","\x88","\x89","\x8a","\x8b","\x8c","\x8d","\x8e","\x8f","\x90",  "\x91","\x92","\x93","\x94","\x95","\x96","\x97","\x98",  "\x99","\x9a"]
-];
+]
 document.querySelector("textarea").addEventListener("keyup", update)
 document.querySelector("textarea").focus()
 
 Math.trunc = Math.trunc || function(x) {
-  return x - x % 1;
+  return x - x % 1
 }
 
 function update(el) {
@@ -22,11 +22,11 @@ function update(el) {
 
 function chain(){
   var argArray = Array.prototype.slice.apply(arguments)
-  var tmp;
+  var tmp
   argArray.forEach(function(arg){
     tmp = arg(tmp)
   })
-  return tmp;
+  return tmp
 }
 
 function encode(source) {
@@ -75,78 +75,77 @@ function encode(source) {
     .replace(/(^|\s)username(\s|$)/ig,   "\x98")
     .replace(/(^|\s)IP(\s|$)/ig,         "\x99")
     .replace(/(^|\s)password(\s|$)/ig,   "\x9a")
-    ;
-    var text="";
+    var text=""
     // introduce \x1f as a sign of switched case
-    var lowercase=true;
+    var lowercase=true
     for(var i=0;i<source.length;i++){
-      var c=source.charAt(i);
+      var c=source.charAt(i)
       if(c.match(/[a-zA-Z]/)){
         if(!c.match(/[a-z]/)===lowercase){
-          text+="\x1f";
-          lowercase=!!c.match(/[a-z]/);
+          text+="\x1f"
+          lowercase=!!c.match(/[a-z]/)
         }
-        c=c.toLowerCase();
+        c=c.toLowerCase()
       }
-      text+=c;
+      text+=c
     }
     text=text
     .split("")
     .map((char)=>{
-      if(char===' ') return {table:true,glyph:0};
-      var ret={table:false,glyph:-1};
+      if(char===' ') return {table:true,glyph:0}
+      var ret={table:false,glyph:-1}
       for(var i=0;i<encoding.length;i++){
         if((ret.glyph=encoding[i].indexOf(char))!==-1){
-          ret.table=encoding[i][0];
-          break;
+          ret.table=encoding[i][0]
+          break
         }
       }
-      return ret;
+      return ret
     })
-    .filter(elem => elem.table);
-    var table="alpha";
-    source=[];
+    .filter(elem => elem.table)
+    var table="alpha"
+    source=[]
     for(var i=0;i<text.length;i++){
-      var elem=text[i];
+      var elem=text[i]
       if(elem.table===true&&elem.glyph===0){
-        source.push("alpha");
-        continue;
+        source.push("alpha")
+        continue
       }
       if(elem.table!==table){
-          source.push(elem.table);
-          table=elem.table;
+          source.push(elem.table)
+          table=elem.table
       }
-      var max=15;
+      var max=15
       if(table==="punc"||table==="spec"){
-          max=14;
+          max=14
       }else if(table==="tags"){
-          max=13;
+          max=13
       }
       if(elem.glyph>max){
-          source.push([1,elem.glyph-max]);
+          source.push([1,elem.glyph-max])
       }else{
-          source.push(elem.glyph+1);
+          source.push(elem.glyph+1)
       }
     }
-    return source;
+    return source
   }
 
   function flatten(arr) {
-     var x = [].concat.apply([], arr);
-     return x;
+     var x = [].concat.apply([], arr)
+     return x
   }
 
   function cellify(input) {
     let tissue = [[]]
-    let total=0;
+    let total=0
     input.forEach(function(thisVal) {
       if(typeof thisVal==="string"){
         if((total%8)>0) // move on to next cell if not empty
-          total += Math.abs((total % 8) - 8);
-        tissue[Math.floor(total / 8)] = [thisVal];
+          total += Math.abs((total % 8) - 8)
+        tissue[Math.floor(total / 8)] = [thisVal]
       }else{
-        let currentCell;
-        let newTotal = total + thisVal;
+        let currentCell
+        let newTotal = total + thisVal
 
         if(Number.isInteger(newTotal / 8)){
           currentCell = (newTotal / 8) - 1
@@ -154,34 +153,36 @@ function encode(source) {
           currentCell = Math.floor(newTotal / 8)
         }
         remainder = (newTotal % 8 === 0 ? 8 : newTotal % 8)
-        tissue[currentCell] ? tissue[currentCell].push(remainder) : tissue[currentCell] = [remainder];
+        tissue[currentCell] ? tissue[currentCell].push(remainder) : tissue[currentCell] = [remainder]
         total += thisVal
       }
-    });
-    for(var i = 0; i < tissue.length; i++) {
-      if(tissue[i] === undefined) {
-        tissue[i] = []
+    })
+    for(var i=0;i<tissue.length;i++){
+      if(tissue[i]===undefined){
+        tissue[i]=[]
       }
     }
-    console.log(tissue);
-    return tissue;
+    return tissue
   }
 
   return chain(directConvert, flatten, cellify)
 }
+
+// setup default input
 input = document.querySelector("textarea")
 input.innerText = "All human beings are born free and equal in dignity and rights. They are endowed with reason and conscience and should act towards one another in a spirit of brotherhood."
+
 function triggerEvent(el, type){
-if ('createEvent' in document) {
-        // modern browsers, IE9+
-        var e = document.createEvent('HTMLEvents');
-        e.initEvent(type, false, true);
-        el.dispatchEvent(e);
-    } else {
-        // IE 8
-        var e = document.createEventObject();
-        e.eventType = type;
-        el.fireEvent('on'+e.eventType, e);
-    }
+  if('createEvent' in document){
+    // modern browsers, IE9+
+    var e = document.createEvent('HTMLEvents')
+    e.initEvent(type, false, true)
+    el.dispatchEvent(e)
+  }else{
+    // IE 8
+    var e = document.createEventObject()
+    e.eventType = type
+    el.fireEvent('on'+e.eventType, e)
+  }
 }
 triggerEvent(input, "keyup")
