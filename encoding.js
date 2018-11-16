@@ -138,14 +138,15 @@ function encode(source) {
 
   function cellify(input) {
     let tissue = [[]]
-    let total=1;
+    let total=0;
     input.forEach(function(thisVal) {
-      let currentCell;
-      let newTotal = total + thisVal;
       if(typeof thisVal==="string"){
         total += Math.abs((total % 8) - 8)
         tissue[Math.floor(total / 8)] = [thisVal];
       }else{
+        let currentCell;
+        let newTotal = total + thisVal;
+
         if(Number.isInteger(newTotal / 8)){
           currentCell = (newTotal / 8) - 1
         } else {
