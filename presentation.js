@@ -21,7 +21,7 @@ function createCells(arr) {
   cellSize = gridSize / gridResolution;
   drawGrid(arr.length)
 
-  arr.length=Math.max(arr.length,gridResolution*gridResolution);
+  arr.length=Math.min(arr.length,gridResolution*gridResolution);
   const finalComputedValues = arr.map(function(cell) {
     function convertToPercent(arrarr) {
       return arrarr.map(function(arr) {
@@ -39,7 +39,7 @@ function createCells(arr) {
         tmpChild.add(alpha)
         break;
         case "num":
-        var number = tmpChild.polygon(convertToPercent([[100,0],[100,10],[0,100],[0,90]])).fill('black')
+        var number = tmpChild.polygon(convertToPercent([[95,0],[100,0],[100,5],[5,100],[0,100],[0,95]])).fill('black')
         tmpChild.add(number)
         break;
         case "punc":
