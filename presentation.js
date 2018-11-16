@@ -135,7 +135,7 @@ function drawSquares(source) {
     } else
     // left side
     /* if x is equal to topLeftMin and y is greater than topLeftMin, decrement y */
-    if ( x === topLeftMin && y > topLeftMin ) {
+    if ( x === topLeftMin && y > topLeftMin + 1 ) {
       source[i].move(x * cellSize, y * cellSize)
       y--;
       if(y === topLeftMin + 1){
@@ -143,7 +143,7 @@ function drawSquares(source) {
       }
     } else
     // top left
-    /* if x is equal to topLeftMin and y is equal topLeftMin, increment x, decrement topLeftMin */
+    /* if x is equal to topLeftMin and y is equal topLeftMin, increment x */
     if ( x === topLeftMin && y === topLeftMin ) {
       source[i].move(x * cellSize, y * cellSize)
       x++;
