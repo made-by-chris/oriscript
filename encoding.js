@@ -141,7 +141,8 @@ function encode(source) {
     let total=0;
     input.forEach(function(thisVal) {
       if(typeof thisVal==="string"){
-        total += Math.abs((total % 8) - 8)
+        if((total%8)>0) // move on to next cell if not empty
+          total += Math.abs((total % 8) - 8);
         tissue[Math.floor(total / 8)] = [thisVal];
       }else{
         let currentCell;
