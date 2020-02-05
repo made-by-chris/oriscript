@@ -21,7 +21,7 @@ function createCells(arr) {
   cellSize = gridSize / gridResolution;
   drawGrid(arr.length)
 
-  arr.length > gridResolution * gridResolution ? arr.length = gridResolution * gridResolution : true
+  arr.length=Math.min(arr.length,gridResolution*gridResolution);
   const finalComputedValues = arr.map(function(cell) {
     function convertToPercent(arrarr) {
       return arrarr.map(function(arr) {
@@ -39,16 +39,20 @@ function createCells(arr) {
         tmpChild.add(alpha)
         break;
         case "num":
-        var number = tmpChild.polygon(convertToPercent([[100,0],[100,10],[0,100],[0,90]])).fill('black')
+        var number = tmpChild.polygon(convertToPercent([[95,0],[100,0],[100,5],[5,100],[0,100],[0,95]])).fill('black')
         tmpChild.add(number)
         break;
         case "punc":
-        var punctuation = tmpChild.polygon(convertToPercent([[10,0],[10,20],[20,20],[20,0]])).fill('black')
+        var punctuation = tmpChild.polygon(convertToPercent([[0,0],[5,0],[20,15],[0,35],[0,45],[20,25],[95,100],[100,100],[100,95],[25,20],[45,0],[35,0],[15,20],[0,5]])).fill('black')
         tmpChild.add(punctuation)
-        case "4":
         break;
-        var one = tmpChild.polygon(convertToPercent([[10,0],[10,20],[20,20],[20,0]])).fill('black')
-        tmpChild.add(one)
+        case "spec":
+        var special = tmpChild.polygon(convertToPercent([[100,0],[95,0],[80,15],[100,35],[100,45],[80,25],[5,100],[0,100],[0,95],[75,20],[55,0],[65,0],[85,20],[100,5]])).fill('black')
+        tmpChild.add(special)
+        break;
+        case "tags":
+        var tags = tmpChild.polygon(convertToPercent([[0,0],[5,0],[50,45],[95,0],[100,0],[100,5],[55,50],[100,95],[100,100],[95,100],[50,55],[5,100],[0,100],[0,95],[45,50],[0,5]])).fill('black');
+        tmpChild.add(tags)
         break;
         case 1:
         var one = tmpChild.polygon(convertToPercent([[10,0],[10,20],[20,20],[20,0]])).fill('black')
@@ -91,7 +95,6 @@ function createCells(arr) {
 }
 
 function drawGrid() {
-  console.log()
   for(i = 0; i < gridResolution + 1; i++) {
     draw.line(0, i * cellSize, gridSize, i * cellSize).stroke({ width: 1 }).addClass("deleteme")
     draw.line(i * cellSize, 0, i * cellSize, gridSize, i * cellSize).stroke({ width: 1 }).addClass("deleteme")
@@ -132,7 +135,7 @@ function drawSquares(source) {
     } else
     // left side
     /* if x is equal to topLeftMin and y is greater than topLeftMin, decrement y */
-    if ( x === topLeftMin && y > topLeftMin ) {
+    if ( x === topLeftMin && y > topLeftMin + 1 ) {
       source[i].move(x * cellSize, y * cellSize)
       y--;
       if(y === topLeftMin + 1){
@@ -140,7 +143,7 @@ function drawSquares(source) {
       }
     } else
     // top left
-    /* if x is equal to topLeftMin and y is equal topLeftMin, increment x, decrement topLeftMin */
+    /* if x is equal to topLeftMin and y is equal topLeftMin, increment x */
     if ( x === topLeftMin && y === topLeftMin ) {
       source[i].move(x * cellSize, y * cellSize)
       x++;
